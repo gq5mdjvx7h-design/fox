@@ -25,8 +25,9 @@ if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
 }
 
 
-  foxInitGame(merged);
-  foxInitUI(merged);
+localStorage.clear();
+foxInitGame(merged);
+foxInitUI(merged);
 }
 
 
