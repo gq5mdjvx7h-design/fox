@@ -6,6 +6,16 @@
 // --------------------------------------
 //  MODULE 1 – Lecture annuelle
 // --------------------------------------
+<div id="cheatClickZone" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  z-index: 9999;
+  cursor: pointer;
+"></div>
 
 const MODULE1_API = {
   getAnnualData() {
@@ -362,4 +372,36 @@ function activateCheatMode() {
     document.body.appendChild(devBtn);
   }
 }
+function initCheatCode() {
+  const zone = document.getElementById("cheatClickZone");
+  if (!zone) return;
+
+  zone.addEventListener("click", () => {
+    const now = Date.now();
+
+    if (now - cheatState.lastClickTime > CHEAT_CONFIG.TIMEOUT) {
+      cheatState.clicks = 0;
+    }
+
+    cheatState.lastClickTime = now;
+    cheatState.clicks++;
+
+    if (cheatState.clicks >= CHEAT_CONFIG.CLICKS_REQUIRED) {
+      cheatState.clicks = 0;
+      promptCheatCode();
+    }
+  });
+}
+
+function promptCheatCode() {
+  const code = prompt("Entrez le code développeur :");
+  if (code === CHEAT_CONFIG.CODE) {
+    cheatState.unlocked = true;
+    localStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
+    activateCheatMode();
+  } else {
+    alert("Code incorrect.");
+  }
+}
+document.addEventListener("DOMContentLoaded", initCheatCode);
 
