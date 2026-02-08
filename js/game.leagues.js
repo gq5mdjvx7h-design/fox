@@ -1,24 +1,35 @@
-/* ============================================================
-   FOX ENGINE — LEAGUES SYSTEM
-   Structure vide pour accueillir 10 ligues
-============================================================ */
+// ===============================
+//  FOX ENGINE – LEAGUES (ORIGINAL FIXED)
+// ===============================
 
-const FOX_LEAGUES = [
-  // On remplira plus tard
-];
+/**
+ * Classement en ligues basé sur l'XP.
+ * 
+ * xp = number
+ */
 
-/* ============================================================
-   Détermination de la ligue actuelle
-============================================================ */
-
-function foxGetLeague(game) {
-  let current = FOX_LEAGUES[0] || null;
-
-  for (const league of FOX_LEAGUES) {
-    if (league.minXP !== undefined && game.xp >= league.minXP) {
-      current = league;
-    }
+function foxLeagueEngine(xp) {
+  if (typeof xp !== "number" || xp < 0) {
+    console.warn("foxLeagueEngine: XP invalide");
+    return "Non classé";
   }
 
-  return current;
+  // Ligues progressives
+  if (xp < 1000) {
+    return "Bronze";
+  }
+  if (xp < 3000) {
+    return "Argent";
+  }
+  if (xp < 6000) {
+    return "Or";
+  }
+  if (xp < 10000) {
+    return "Platine";
+  }
+  if (xp < 15000) {
+    return "Diamant";
+  }
+
+  return "Maître";
 }
