@@ -60,9 +60,19 @@ function foxReadModule2() {
 
 /* ============================================================
    Fusion des données (lecture seule)
+   ⚠️ Version corrigée : NE PAS ÉCRASER LE MODE DÉMO
 ============================================================ */
 
 function foxMergeData() {
+
+  // 🔥 IMPORTANT :
+  // Si le mode DEMO est actif, on NE fusionne PAS les données réelles.
+  // On laisse core.js utiliser foxLoadDemoData().
+  if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
+    foxLog("MERGE", "Mode DEMO actif — fusion ignorée");
+    return null; 
+  }
+
   const m1 = foxReadModule1();
   const m2 = foxReadModule2();
 
