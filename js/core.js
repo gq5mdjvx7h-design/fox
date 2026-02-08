@@ -2,6 +2,7 @@
    FOX ENGINE — CORE SYSTEM
    Initialisation du moteur, fusion des données, orchestration
 ============================================================ */
+document.body.style.background = "red";
 
 let FOX_ENGINE = {
   ready: false,
