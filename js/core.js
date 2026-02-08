@@ -1,8 +1,6 @@
 /* ============================================================
    FOX ENGINE — CORE SYSTEM
-   Initialisation du moteur, fusion des données, orchestration
-============================================================ */
-document.body.style.background = "red";
+   Initialisation du moteur, fusion des données, 
 
 let FOX_ENGINE = {
   ready: false,
@@ -12,6 +10,7 @@ let FOX_ENGINE = {
 /* ============================================================
    Initialisation principale
 ============================================================ */
+alert("CORE START");
 
 function foxInit() {
   foxLog("CORE", "Initialisation du moteur");
