@@ -14,6 +14,7 @@ let FOX_ENGINE = {
 
 function foxInit() {
   foxLog("CORE", "Initialisation du moteur");
+alert("DEMO MODE = " + FOX_DEMO_MODE);
 
   let merged;
 
