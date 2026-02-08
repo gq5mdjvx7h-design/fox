@@ -6,7 +6,9 @@
 let FOX_GAME = {
   xp: 0,
   level: 1,
-  badges: []
+  badges: [],
+  hasModule1: false,
+  hasModule2: false
 };
 
 /* ============================================================
@@ -100,6 +102,16 @@ function foxInitGame(merged) {
   FOX_GAME.level = level;
   FOX_GAME.badges = badges;
 
+  // Détection des modules présents (mode démo ou réel)
+  FOX_GAME.hasModule1 = !!(merged.module1 && merged.module1.years);
+  FOX_GAME.hasModule2 = !!(merged.module2 && merged.module2.years);
+
   foxSaveGame();
-  foxMark("Game update", { xp, level, badges });
+  foxMark("Game update", {
+    xp,
+    level,
+    badges,
+    hasModule1: FOX_GAME.hasModule1,
+    hasModule2: FOX_GAME.hasModule2
+  });
 }
