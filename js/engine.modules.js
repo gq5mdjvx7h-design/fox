@@ -6,16 +6,6 @@
 // --------------------------------------
 //  MODULE 1 – Lecture annuelle
 // --------------------------------------
-<div id="cheatClickZone" style="
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 40px;
-  height: 40px;
-  opacity: 0;
-  z-index: 9999;
-  cursor: pointer;
-"></div>
 
 const MODULE1_API = {
   getAnnualData() {
