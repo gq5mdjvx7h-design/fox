@@ -1,5 +1,5 @@
 // ===============================
-//  FOX ENGINE – DEV MENU (MODE DÉVELOPPEUR)
+//  FOX ENGINE – DEV MENU (API développeur)
 // ===============================
 
 window.DEV = {
@@ -43,10 +43,8 @@ window.DEV = {
       const scn = FOX_SCENARIOS.find(s => s.id === id);
       if (!scn) return console.warn("Scénario introuvable:", id);
 
-      console.log("Exécution scénario:", scn.name);
-      console.log(scn);
-
-      // Pas d'effet automatique pour l'instant
+      console.log("▶️ Exécution scénario :", scn);
+      return scn;
     },
     reset() {
       if (!STATE) return;
