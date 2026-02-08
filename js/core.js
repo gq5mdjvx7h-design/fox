@@ -11,6 +11,8 @@ let FOX_ENGINE = {
    Initialisation principale
 ============================================================ */
 alert("CORE START");
+alert("DEMO MODE TYPE = " + typeof FOX_DEMO_MODE);
+
 alert("TEST 1");
 let merged;
 alert("TEST 2");
