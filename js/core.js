@@ -11,6 +11,23 @@ let FOX_ENGINE = {
    Initialisation principale
 ============================================================ */
 alert("CORE START");
+alert("TEST 1");
+let merged;
+alert("TEST 2");
+
+if (FOX_DEMO_MODE) {
+    alert("TEST 3");
+    merged = foxLoadDemoData();
+    alert("TEST 4");
+} else {
+    alert("TEST 5");
+    merged = foxMergeData();
+    alert("TEST 6");
+}
+
+alert("TEST 7");
+foxInitGame(merged);
+alert("TEST 8");
 
 function foxInit() {
   foxLog("CORE", "Initialisation du moteur");
