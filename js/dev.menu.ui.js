@@ -22,6 +22,7 @@
       <button data-tab="time">Temps</button>
       <button data-tab="state">State</button>
       <button data-tab="modules">Modules</button>
+      <button data-tab="logs">Logs</button>
       <button data-tab="god">GOD MODE</button>
     </div>
 
@@ -80,6 +81,20 @@
         <button onclick="DEV.modules.bridges()">Inspecter Bridges</button>
       </div>
 
+      <div class="dev-tab" id="tab-logs">
+        <h3>Logs en temps réel</h3>
+
+        <div class="log-controls">
+          <button data-logfilter="all">Tous</button>
+          <button data-logfilter="log">Log</button>
+          <button data-logfilter="warn">Warn</button>
+          <button data-logfilter="error">Error</button>
+          <button id="clearLogsBtn">Clear</button>
+        </div>
+
+        <pre id="devLogViewer" class="dev-log"></pre>
+      </div>
+
       <div class="dev-tab" id="tab-god">
         <h3>🔥 GOD MODE</h3>
         <button class="god-btn" onclick="DEV.godMode()">Activer GOD MODE</button>
@@ -112,60 +127,5 @@
   window.toggleDevPanel = function() {
     panel.classList.toggle("hidden");
   };
-
-  // ===============================
-  //  SCENARIO TESTER
-  // ===============================
-
-  function loadScenarioList() {
-    const select = document.getElementById("scenarioSelect");
-    if (!select) return;
-
-    select.innerHTML = "";
-
-    FOX_SCENARIOS.forEach(scn => {
-      const opt = document.createElement("option");
-      opt.value = scn.id;
-      opt.textContent = `${scn.id} — ${scn.name}`;
-      select.appendChild(opt);
-    });
-
-    updateScenarioDetails();
-  }
-
-  function updateScenarioDetails() {
-    const id = parseInt(document.getElementById("scenarioSelect").value);
-    const scn = FOX_SCENARIOS.find(s => s.id === id);
-
-    const box = document.getElementById("scenarioDetails");
-    if (!scn) {
-      box.textContent = "Aucun scénario sélectionné.";
-      return;
-    }
-
-    box.textContent = JSON.stringify(scn, null, 2);
-  }
-
-  document.addEventListener("change", e => {
-    if (e.target.id === "scenarioSelect") {
-      updateScenarioDetails();
-    }
-  });
-
-  document.getElementById("runScenarioBtn").onclick = () => {
-    const id = parseInt(document.getElementById("scenarioSelect").value);
-    const scn = DEV.scenarios.run(id);
-
-    const resultBox = document.getElementById("scenarioResult");
-
-    if (!scn) {
-      resultBox.textContent = "❌ Scénario introuvable.";
-      return;
-    }
-
-    resultBox.textContent = `Scénario exécuté : ${scn.name}`;
-  };
-
-  loadScenarioList();
 
 })();
