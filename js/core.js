@@ -28,7 +28,9 @@ if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
 
 
 localStorage.clear();
+foxLog("CORE", "Avant foxInitGame");
 foxInitGame(merged);
+foxLog("CORE", "Après foxInitGame");
 foxInitUI(merged);
 }
 
