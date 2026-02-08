@@ -289,3 +289,77 @@ let cheatState = {
   lastClickTime: 0,
   unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
 };
+function activateCheatMode() {
+  debugLog("🎮 Mode développeur activé", "success");
+
+  // Désactivation en production (à enlever si tu veux l'activer partout)
+  if (location.hostname !== "localhost") {
+    alert("Mode développeur désactivé en production");
+    return;
+  }
+
+  // Affichage des éléments UI cachés
+  const badge = document.getElementById("cheatBadge");
+  if (badge) badge.classList.remove("hidden");
+
+  const banner = document.getElementById("debugBanner");
+  if (banner) banner.classList.remove("hidden");
+
+  const debugPanel = document.getElementById("debugPanel");
+  if (debugPanel) debugPanel.classList.remove("hidden");
+
+  const workMode = document.getElementById("workMode");
+  if (workMode) {
+    if (!Array.from(workMode.options).some(opt => opt.value === "demo")) {
+      const demoOption = document.createElement("option");
+      demoOption.value = "demo";
+      demoOption.textContent = "🎮 Démo (Mode développeur)";
+      workMode.appendChild(demoOption);
+    }
+  }
+
+  addCheatFunctions();
+
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  debugLog("🎮 FONCTIONNALITÉS DÉBLOQUÉES :", "success");
+  debugLog("  ✅ Panel debug complet", "success");
+  debugLog("  ✅ Mode démo saisie manuelle", "success");
+  debugLog("  ✅ Commandes console avancées", "success");
+  debugLog("  ✅ XP boost (x2)", "success");
+  debugLog("  ✅ Déblocage instantané badges", "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+
+  // ===============================
+  //  ACTIVATION DU DEV MENU
+  // ===============================
+  if (window.DEV) {
+    console.log("🛠️ DEV MENU chargé et activé");
+
+    // Bouton DEV
+    const devBtn = document.createElement("button");
+    devBtn.id = "devMenuButton";
+    devBtn.textContent = "🛠️ DEV";
+    devBtn.style.position = "fixed";
+    devBtn.style.bottom = "20px";
+    devBtn.style.right = "20px";
+    devBtn.style.zIndex = "99999";
+    devBtn.style.padding = "10px 15px";
+    devBtn.style.borderRadius = "8px";
+    devBtn.style.background = "#ffcc00";
+    devBtn.style.color = "#000";
+    devBtn.style.fontWeight = "bold";
+    devBtn.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+    devBtn.style.cursor = "pointer";
+
+    devBtn.onclick = () => {
+      if (window.toggleDevPanel) {
+        window.toggleDevPanel();
+      } else {
+        alert("Le panneau développeur n'est pas encore chargé.");
+      }
+    };
+
+    document.body.appendChild(devBtn);
+  }
+}
+
