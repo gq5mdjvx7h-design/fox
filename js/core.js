@@ -12,27 +12,20 @@ let FOX_ENGINE = {
    Initialisation principale
 ============================================================ */
 
-async function foxInit() {
-  foxLog("INIT", "Initialisation du Fox Engine…");
+function foxInit() {
+  foxLog("CORE", "Initialisation du moteur");
 
-  // Lecture des modules 1 et 2
-  const merged = foxMergeData();
-  FOX_ENGINE.mergedData = merged;
+  let merged;
 
-  foxMark("Données fusionnées");
+  if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
+    foxLog("CORE", "Mode DEMO activé");
+    merged = foxLoadDemoData();
+  } else {
+    merged = foxMergeData();
+  }
 
-  // Préparation du moteur de jeu
   foxInitGame(merged);
-
-  foxMark("Moteur de jeu initialisé");
-
-  // Préparation de l'interface
   foxInitUI(merged);
-
-  foxMark("Interface initialisée");
-
-  FOX_ENGINE.ready = true;
-  foxLog("READY", "Fox Engine opérationnel");
 }
 
 /* ============================================================
