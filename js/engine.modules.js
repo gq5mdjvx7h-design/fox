@@ -392,7 +392,6 @@ function initCheatCode() {
     }
   });
 }
-
 function promptCheatCode() {
   const code = prompt("Entrez le code développeur :");
   if (code === CHEAT_CONFIG.CODE) {
