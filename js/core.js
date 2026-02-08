@@ -17,12 +17,13 @@ function foxInit() {
 
   let merged;
 
-  if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
+if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
     foxLog("CORE", "Mode DEMO activé");
     merged = foxLoadDemoData();
-  } else {
+} else {
     merged = foxMergeData();
-  }
+}
+
 
   foxInitGame(merged);
   foxInitUI(merged);
