@@ -1,117 +1,105 @@
-/* ============================================================
-   FOX ENGINE — GAME SYSTEM
-   XP, niveaux, badges, progression interne
-============================================================ */
+// ===============================
+//  FOX ENGINE – GAME (ORIGINAL FIXED)
+// ===============================
 
-let FOX_GAME = {
-  xp: 0,
-  level: 1,
-  badges: [],
-  hasModule1: false,
-  hasModule2: false
-};
-
-/* ============================================================
-   Chargement de la progression interne
-============================================================ */
-
-function foxLoadGame() {
-  const saved = foxLoad(FOX_KEYS.GAME);
-
-  if (saved) {
-    FOX_GAME = saved;
-    foxLog("GAME", "Progression chargée", FOX_GAME);
-  } else {
-    foxLog("GAME", "Aucune progression trouvée, initialisation");
+/**
+ * Calcule les totaux d'heures à partir des données fusionnées.
+ */
+function foxComputeTotals(merged) {
+  if (!merged || !merged.module1 || !merged.module1.years) {
+    throw new Error("Données invalides dans foxComputeTotals");
   }
-}
 
-/* ============================================================
-   Sauvegarde interne
-============================================================ */
+  let totalHours = 0;
+  let totalH25 = 0;
+  let totalH50 = 0;
 
-function foxSaveGame() {
-  foxSave(FOX_KEYS.GAME, FOX_GAME);
-  foxLog("GAME", "Progression sauvegardée", FOX_GAME);
-}
+  const years = merged.module1.years;
 
-/* ============================================================
-   Calcul du XP depuis les données fusionnées
-============================================================ */
+  for (const year of Object.keys(years)) {
+    const months = years[year].months;
 
-function foxComputeXP(merged) {
-  let xp = 0;
+    for (const m of Object.keys(months)) {
+      const data = months[m];
 
-  // Module 1 : heures annuelles
-  if (merged.module1 && merged.module1.years) {
-    for (const year of Object.values(merged.module1.years)) {
-      for (const month of Object.values(year.months || {})) {
-        xp += (month.total || 0) * 1; // 1 XP par heure
-      }
+      totalHours += Number(data.total || 0);
+      totalH25 += Number(data.h25 || 0);
+      totalH50 += Number(data.h50 || 0);
     }
   }
 
-  // Module 2 : heures mensualisées
-  if (merged.module2 && merged.module2.years) {
-    for (const year of Object.values(merged.module2.years)) {
-      for (const month of Object.values(year.months || {})) {
-        xp += (month.h25 || 0) * 2; // 2 XP par heure 25%
-        xp += (month.h50 || 0) * 3; // 3 XP par heure 50%
-      }
-    }
-  }
-
-  return xp;
+  return { totalHours, totalH25, totalH50 };
 }
 
-/* ============================================================
-   Calcul du niveau
-============================================================ */
+/**
+ * Calcule l'XP totale.
+ */
+function foxComputeXP(totals) {
+  if (!totals) return 0;
 
+  const xp =
+    totals.totalHours * 10 +
+    totals.totalH25 * 20 +
+    totals.totalH50 * 30;
+
+  return Math.round(xp);
+}
+
+/**
+ * Calcule le niveau.
+ */
 function foxComputeLevel(xp) {
-  return Math.floor(Math.sqrt(xp / 10)) + 1;
+  if (!xp || xp < 0) return 1;
+  return Math.floor(xp / 1000) + 1;
 }
 
-/* ============================================================
-   Attribution de badges simples
-============================================================ */
+/**
+ * Calcule les badges (délégué à game.badges.js)
+ */
+function foxComputeBadges(totals, xp) {
+  if (typeof foxBadgeEngine !== "function") {
+    console.warn("foxBadgeEngine manquant");
+    return [];
+  }
 
-function foxComputeBadges(xp, level) {
-  const badges = [];
-
-  if (xp > 100) badges.push("Renard Bronze");
-  if (xp > 500) badges.push("Renard Argent");
-  if (xp > 1500) badges.push("Renard Or");
-  if (level > 10) badges.push("Maître du Temps");
-
-  return badges;
+  return foxBadgeEngine(totals, xp);
 }
 
-/* ============================================================
-   Initialisation du moteur de jeu
-============================================================ */
+/**
+ * Calcule les ligues (délégué à game.leagues.js)
+ */
+function foxComputeLeague(xp) {
+  if (typeof foxLeagueEngine !== "function") {
+    console.warn("foxLeagueEngine manquant");
+    return "Non classé";
+  }
 
+  return foxLeagueEngine(xp);
+}
+
+/**
+ * Initialise l'état complet du jeu.
+ */
 function foxInitGame(merged) {
-  foxLoadGame();
+  foxLog("GAME", "Initialisation du moteur de jeu");
 
-  const xp = foxComputeXP(merged);
+  const totals = foxComputeTotals(merged);
+  const xp = foxComputeXP(totals);
   const level = foxComputeLevel(xp);
-  const badges = foxComputeBadges(xp, level);
+  const badges = foxComputeBadges(totals, xp);
+  const league = foxComputeLeague(xp);
 
-  FOX_GAME.xp = xp;
-  FOX_GAME.level = level;
-  FOX_GAME.badges = badges;
-
-  // Détection des modules présents (mode démo ou réel)
-  FOX_GAME.hasModule1 = !!(merged.module1 && merged.module1.years);
-  FOX_GAME.hasModule2 = !!(merged.module2 && merged.module2.years);
-
-  foxSaveGame();
-  foxMark("Game update", {
+  const gameState = {
+    totals,
     xp,
     level,
     badges,
-    hasModule1: FOX_GAME.hasModule1,
-    hasModule2: FOX_GAME.hasModule2
-  });
+    league,
+    lastSync: merged.lastSync
+  };
+
+  foxSaveStorage(gameState);
+  foxLog("GAME", "État final du jeu", gameState);
+
+  return gameState;
 }
