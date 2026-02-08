@@ -1,78 +1,28 @@
-/* ============================================================
-   FOX ENGINE — CORE SYSTEM
-   Initialisation du moteur, fusion des données, 
+// ===============================
+//  FOX ENGINE – CORE (CLEAN)
+// ===============================
 
-let FOX_ENGINE = {
-  ready: false,
-  mergedData: null
-};
+async function foxInit() {
+  try {
+    // Chargement du stockage interne
+    foxInitStorage();
 
-/* ============================================================
-   Initialisation principale
-============================================================ */
-alert("CORE START");
-alert("DEMO MODE TYPE = " + typeof FOX_DEMO_MODE);
+    // Mode démo activé
+    const merged = foxLoadDemoData();
 
-alert("TEST 1");
-let merged;
-alert("TEST 2");
+    // Initialisation du moteur
+    foxInitGame(merged);
+    foxInitUI(merged);
 
-if (FOX_DEMO_MODE) {
-    alert("TEST 3");
-    merged = foxLoadDemoData();
-    alert("TEST 4");
-} else {
-    alert("TEST 5");
-    merged = foxMergeData();
-    alert("TEST 6");
+  } catch (err) {
+    console.error("Erreur dans foxInit :", err);
+    document.querySelector("#app").innerHTML = `
+      <div class="error">
+        Une erreur est survenue lors du chargement du moteur.
+      </div>
+    `;
+  }
 }
 
-alert("TEST 7");
-foxInitGame(merged);
-alert("TEST 8");
-
-function foxInit() {
-  foxLog("CORE", "Initialisation du moteur");
-alert("DEMO MODE = " + FOX_DEMO_MODE);
-
-  let merged;
-
-if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
-    foxLog("CORE", "Mode DEMO activé");
-    merged = foxLoadDemoData();
-} else {
-    merged = foxMergeData();
-}
-
-
-localStorage.clear();
-foxLog("CORE", "Avant foxInitGame");
-foxInitGame(merged);
-foxLog("CORE", "Après foxInitGame");
-foxInitUI(merged);
-}
-
-
-/* ============================================================
-   Rafraîchissement manuel (si besoin)
-============================================================ */
-
-function foxRefresh() {
-  foxLog("REFRESH", "Rafraîchissement manuel demandé");
-
-  const merged = foxMergeData();
-  FOX_ENGINE.mergedData = merged;
-
-  foxInitGame(merged);
-  foxInitUI(merged);
-
-  foxMark("Rafraîchissement terminé");
-}
-
-/* ============================================================
-   Auto-démarrage
-============================================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-  foxInit();
-});
+// Lancement automatique
+document.addEventListener("DOMContentLoaded", foxInit);
