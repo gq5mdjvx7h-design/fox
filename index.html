@@ -2,23 +2,20 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Fox Engine – Module 3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Style principal -->
+  <title>Fox Engine – Module 3</title>
+
+  <!-- PWA (optionnel) -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- PWA (optionnel si tu veux l’activer plus tard) -->
-  <link rel="manifest" href="../manifest.json">
-  <meta name="theme-color" content="#4FB3C2">
-
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#000000">
 </head>
 
 <body>
-
   <header class="topbar">
     <h1>Fox Engine – Module 3</h1>
-    <p class="subtitle">Lecture & interprétation des modules 1 et 2</p>
+    <p class="subtitle">Lecture & interface</p>
   </header>
 
   <main id="app">
@@ -28,22 +25,27 @@
   </main>
 
   <footer>
-    Développé par C. Anthony – Module 3
+    Développé par C. Anthony – Module
   </footer>
 
-  <!-- Scripts du moteur -->
-<script src="js/storage.js?v=200"></script>
-<script src="js/debug.js?v=200"></script>
-<script src="js/reader.js?v=200"></script>
-<script src="js/core.js?v=200"></script>
-<script src="js/demo.js?v=200"></script>
-<script src="js/game.badges.js?v=200"></script>
-<script src="js/game.leagues.js?v=200"></script>
-<script src="js/game.js?v=200"></script>
-<script src="js/ui.js?v=200"></script>
+  <!-- Scripts du moteur (ordre correct + versioning) -->
+  <script src="js/storage.js?v=400"></script>
+  <script src="js/debug.js?v=400"></script>
+  <script src="js/reader.js?v=400"></script>
 
+  <!-- Le cœur du moteur doit être chargé AVANT demo/game/ui -->
+  <script src="js/core.js?v=400"></script>
 
+  <!-- Mode démo (doit être chargé AVANT game.js) -->
+  <script src="js/demo.js?v=400"></script>
 
+  <!-- Moteur de jeu -->
+  <script src="js/game.badges.js?v=400"></script>
+  <script src="js/game.leagues.js?v=400"></script>
+  <script src="js/game.js?v=400"></script>
+
+  <!-- Interface -->
+  <script src="js/ui.js?v=400"></script>
 
 </body>
 </html>
