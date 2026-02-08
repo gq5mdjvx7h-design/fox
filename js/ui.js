@@ -30,8 +30,8 @@ function foxInitUI(merged) {
   cardData.className = "card";
   cardData.innerHTML = `
     <h2>Données détectées</h2>
-    <p><strong>Module 1 :</strong> ${merged.module1 ? "Oui" : "Non"}</p>
-    <p><strong>Module 2 :</strong> ${merged.module2 ? "Oui" : "Non"}</p>
+    <p><strong>Module 1 :</strong> ${FOX_GAME.hasModule1 ? "Oui" : "Non"}</p>
+    <p><strong>Module 2 :</strong> ${FOX_GAME.hasModule2 ? "Oui" : "Non"}</p>
     <p><strong>Dernière synchronisation :</strong> ${merged.lastSync}</p>
   `;
   app.appendChild(cardData);
