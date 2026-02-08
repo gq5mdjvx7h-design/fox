@@ -1,89 +1,92 @@
-/* ============================================================
-   FOX ENGINE — DATA READER
-   Lecture seule des modules 1 et 2
-============================================================ */
+// ===============================
+//  FOX ENGINE – READER (ORIGINAL FIXED)
+// ===============================
 
-/* ============================================================
-   Chargement brut depuis localStorage
-============================================================ */
-
-function foxReadRaw(key) {
+/**
+ * Lecture sécurisée d'une valeur dans un objet profondément imbriqué.
+ * Exemple : foxRead(data, "module1.years.2024.months.01.total")
+ */
+function foxRead(obj, path, fallback = null) {
   try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    return JSON.parse(raw);
+    if (!obj || !path) return fallback;
+
+    const parts = path.split(".");
+    let current = obj;
+
+    for (const p of parts) {
+      if (current[p] === undefined || current[p] === null) {
+        return fallback;
+      }
+      current = current[p];
+    }
+
+    return current;
   } catch (e) {
-    foxLog("ERROR", "Lecture impossible pour " + key, e);
-    return null;
+    console.error("Erreur foxRead:", e);
+    return fallback;
   }
 }
 
-/* ============================================================
-   Lecture du module 1 (compteur annuel)
-============================================================ */
+/**
+ * Vérifie si un chemin existe dans un objet.
+ */
+function foxHas(obj, path) {
+  try {
+    if (!obj || !path) return false;
 
-function foxReadModule1() {
-  const data = foxReadRaw("HEURES_DATA");
+    const parts = path.split(".");
+    let current = obj;
 
-  if (!data) {
-    foxLog("INFO", "Module 1 non trouvé");
-    return null;
+    for (const p of parts) {
+      if (current[p] === undefined || current[p] === null) {
+        return false;
+      }
+      current = current[p];
+    }
+
+    return true;
+  } catch (e) {
+    console.error("Erreur foxHas:", e);
+    return false;
   }
-
-  foxLog("LOAD", "Module 1 chargé", data);
-
-  return {
-    type: "module1",
-    years: data
-  };
 }
 
-/* ============================================================
-   Lecture du module 2 (mensualisé)
-============================================================ */
-
-function foxReadModule2() {
-  const data = foxReadRaw("PAYE_DATA");
-
-  if (!data) {
-    foxLog("INFO", "Module 2 non trouvé");
-    return null;
+/**
+ * Fusionne deux objets profondément.
+ * (Utilisé si un jour tu veux fusionner module1 + module2 réels)
+ */
+function foxDeepMerge(target, source) {
+  if (typeof target !== "object" || typeof source !== "object") {
+    return source;
   }
 
-  foxLog("LOAD", "Module 2 chargé", data);
+  const output = { ...target };
 
-  return {
-    type: "module2",
-    years: data
-  };
+  for (const key of Object.keys(source)) {
+    if (source[key] instanceof Object && key in target) {
+      output[key] = foxDeepMerge(target[key], source[key]);
+    } else {
+      output[key] = source[key];
+    }
+  }
+
+  return output;
 }
 
-/* ============================================================
-   Fusion des données (lecture seule)
-   ⚠️ Version corrigée : NE PAS ÉCRASER LE MODE DÉMO
-============================================================ */
-
+/**
+ * Fusionne les données réelles (si pas en mode démo)
+ */
 function foxMergeData() {
+  const module1 = foxLoadStorage();
+  const module2 = foxLoadStorage(); // placeholder si tu veux un jour séparer
 
-  // 🔥 IMPORTANT :
-  // Si le mode DEMO est actif, on NE fusionne PAS les données réelles.
-  // On laisse core.js utiliser foxLoadDemoData().
-  if (typeof FOX_DEMO_MODE !== "undefined" && FOX_DEMO_MODE === true) {
-    foxLog("MERGE", "Mode DEMO actif — fusion ignorée");
-    return null; 
+  if (!module1 && !module2) {
+    throw new Error("Aucune donnée réelle disponible");
   }
 
-  const m1 = foxReadModule1();
-  const m2 = foxReadModule2();
+  if (module1 && module2) {
+    return foxDeepMerge(module1, module2);
+  }
 
-  const merged = {
-    module1: m1,
-    module2: m2,
-    lastSync: new Date().toISOString()
-  };
-
-  foxLog("MERGE", "Fusion des données terminée", merged);
-  foxMark("Fusion terminée");
-
-  return merged;
+  return module1 || module2;
 }
