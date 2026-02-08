@@ -289,14 +289,16 @@ let cheatState = {
   lastClickTime: 0,
   unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
 };
+
 function activateCheatMode() {
   debugLog("🎮 Mode développeur activé", "success");
 
-  // Désactivation en production (à enlever si tu veux l'activer partout)
-  if (location.hostname !== "localhost") {
-    alert("Mode développeur désactivé en production");
-    return;
-  }
+  // 🔥 IMPORTANT : suppression du blocage en production
+  // (Tu peux remettre la condition si tu veux le bloquer en ligne)
+  // if (location.hostname !== "localhost") {
+  //   alert("Mode développeur désactivé en production");
+  //   return;
+  // }
 
   // Affichage des éléments UI cachés
   const badge = document.getElementById("cheatBadge");
@@ -318,24 +320,14 @@ function activateCheatMode() {
     }
   }
 
-  addCheatFunctions();
+  // Ajout des fonctions cheat
+  if (typeof addCheatFunctions === "function") {
+    addCheatFunctions();
+  }
 
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
-  debugLog("🎮 FONCTIONNALITÉS DÉBLOQUÉES :", "success");
-  debugLog("  ✅ Panel debug complet", "success");
-  debugLog("  ✅ Mode démo saisie manuelle", "success");
-  debugLog("  ✅ Commandes console avancées", "success");
-  debugLog("  ✅ XP boost (x2)", "success");
-  debugLog("  ✅ Déblocage instantané badges", "success");
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
-
-  // ===============================
-  //  ACTIVATION DU DEV MENU
-  // ===============================
-  if (window.DEV) {
-    console.log("🛠️ DEV MENU chargé et activé");
-
-    // Bouton DEV
+  // Bouton DEV
+  const existingBtn = document.getElementById("devMenuButton");
+  if (!existingBtn) {
     const devBtn = document.createElement("button");
     devBtn.id = "devMenuButton";
     devBtn.textContent = "🛠️ DEV";
@@ -361,7 +353,28 @@ function activateCheatMode() {
 
     document.body.appendChild(devBtn);
   }
+
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  debugLog("🎮 FONCTIONNALITÉS DÉBLOQUÉES :", "success");
+  debugLog("  ✅ Panel debug complet", "success");
+  debugLog("  ✅ Mode démo saisie manuelle", "success");
+  debugLog("  ✅ Commandes console avancées", "success");
+  debugLog("  ✅ XP boost (x2)", "success");
+  debugLog("  ✅ Déblocage instantané badges", "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
 }
+
+function promptCheatCode() {
+  const code = prompt("Entrez le code développeur :");
+  if (code === CHEAT_CONFIG.CODE) {
+    cheatState.unlocked = true;
+    localStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
+    activateCheatMode();
+  } else {
+    alert("Code incorrect.");
+  }
+}
+
 function initCheatCode() {
   const zone = document.getElementById("cheatClickZone");
   if (!zone) return;
@@ -381,16 +394,11 @@ function initCheatCode() {
       promptCheatCode();
     }
   });
-}
-function promptCheatCode() {
-  const code = prompt("Entrez le code développeur :");
-  if (code === CHEAT_CONFIG.CODE) {
-    cheatState.unlocked = true;
-    localStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
+
+  // Si déjà débloqué → activer automatiquement
+  if (cheatState.unlocked) {
     activateCheatMode();
-  } else {
-    alert("Code incorrect.");
   }
 }
-document.addEventListener("DOMContentLoaded", initCheatCode);
 
+document.addEventListener("DOMContentLoaded", initCheatCode);
