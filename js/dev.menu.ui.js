@@ -43,11 +43,18 @@
 
       <div class="dev-tab" id="tab-scenarios">
         <h3>Scénarios</h3>
-        <input id="scenarioIdInput" type="number" placeholder="ID scénario">
-        <button onclick="DEV.scenarios.run(parseInt(document.getElementById('scenarioIdInput').value))">
-          Exécuter scénario
-        </button>
+
+        <label for="scenarioSelect">Liste des scénarios :</label>
+        <select id="scenarioSelect"></select>
+
+        <button id="runScenarioBtn">▶️ Exécuter</button>
         <button onclick="DEV.scenarios.reset()">Reset scénarios</button>
+
+        <h4>Détails :</h4>
+        <pre id="scenarioDetails" class="dev-pre"></pre>
+
+        <h4>Résultat :</h4>
+        <pre id="scenarioResult" class="dev-pre"></pre>
       </div>
 
       <div class="dev-tab" id="tab-time">
@@ -105,5 +112,60 @@
   window.toggleDevPanel = function() {
     panel.classList.toggle("hidden");
   };
+
+  // ===============================
+  //  SCENARIO TESTER
+  // ===============================
+
+  function loadScenarioList() {
+    const select = document.getElementById("scenarioSelect");
+    if (!select) return;
+
+    select.innerHTML = "";
+
+    FOX_SCENARIOS.forEach(scn => {
+      const opt = document.createElement("option");
+      opt.value = scn.id;
+      opt.textContent = `${scn.id} — ${scn.name}`;
+      select.appendChild(opt);
+    });
+
+    updateScenarioDetails();
+  }
+
+  function updateScenarioDetails() {
+    const id = parseInt(document.getElementById("scenarioSelect").value);
+    const scn = FOX_SCENARIOS.find(s => s.id === id);
+
+    const box = document.getElementById("scenarioDetails");
+    if (!scn) {
+      box.textContent = "Aucun scénario sélectionné.";
+      return;
+    }
+
+    box.textContent = JSON.stringify(scn, null, 2);
+  }
+
+  document.addEventListener("change", e => {
+    if (e.target.id === "scenarioSelect") {
+      updateScenarioDetails();
+    }
+  });
+
+  document.getElementById("runScenarioBtn").onclick = () => {
+    const id = parseInt(document.getElementById("scenarioSelect").value);
+    const scn = DEV.scenarios.run(id);
+
+    const resultBox = document.getElementById("scenarioResult");
+
+    if (!scn) {
+      resultBox.textContent = "❌ Scénario introuvable.";
+      return;
+    }
+
+    resultBox.textContent = `Scénario exécuté : ${scn.name}`;
+  };
+
+  loadScenarioList();
 
 })();
