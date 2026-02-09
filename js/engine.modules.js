@@ -274,7 +274,7 @@ let BADGES = [];
 let MILESTONES = [];
 
 // --------------------------------------
-//  CHEAT CODE
+//  CHEAT CODE – SESSION ONLY
 // --------------------------------------
 
 const CHEAT_CONFIG = {
@@ -287,31 +287,21 @@ const CHEAT_CONFIG = {
 let cheatState = {
   clicks: 0,
   lastClickTime: 0,
-  unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
+  unlocked: sessionStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
 };
+
 function activateCheatMode() {
-  console.log("STEP 1: activateCheatMode() appelée");
+  console.log("🎮 Mode développeur activé");
 
-  // Suppression du blocage localhost
-  console.log("STEP 2: Pas de blocage production");
-
-  // Badge
-  console.log("STEP 3: Tentative d'afficher cheatBadge");
   const badge = document.getElementById("cheatBadge");
   if (badge) badge.classList.remove("hidden");
 
-  // Banner
-  console.log("STEP 4: Tentative d'afficher debugBanner");
   const banner = document.getElementById("debugBanner");
   if (banner) banner.classList.remove("hidden");
 
-  // Debug panel
-  console.log("STEP 5: Tentative d'afficher debugPanel");
   const debugPanel = document.getElementById("debugPanel");
   if (debugPanel) debugPanel.classList.remove("hidden");
 
-  // WorkMode
-  console.log("STEP 6: Tentative d'ajouter mode demo");
   const workMode = document.getElementById("workMode");
   if (workMode) {
     if (!Array.from(workMode.options).some(opt => opt.value === "demo")) {
@@ -322,19 +312,12 @@ function activateCheatMode() {
     }
   }
 
-  // addCheatFunctions
-  console.log("STEP 7: Tentative d'exécuter addCheatFunctions()");
   if (typeof addCheatFunctions === "function") {
     addCheatFunctions();
-  } else {
-    console.log("⚠️ addCheatFunctions() n'existe pas");
   }
 
-  // DEV MENU
-  console.log("STEP 8: Tentative d'activer DEV MENU");
-  if (window.DEV) {
-    console.log("STEP 9: DEV MENU détecté");
-
+  const existingBtn = document.getElementById("devMenuButton");
+  if (!existingBtn) {
     const devBtn = document.createElement("button");
     devBtn.id = "devMenuButton";
     devBtn.textContent = "🛠️ DEV";
@@ -351,7 +334,6 @@ function activateCheatMode() {
     devBtn.style.cursor = "pointer";
 
     devBtn.onclick = () => {
-      console.log("STEP 10: Clic sur bouton DEV");
       if (window.toggleDevPanel) {
         window.toggleDevPanel();
       } else {
@@ -360,21 +342,14 @@ function activateCheatMode() {
     };
 
     document.body.appendChild(devBtn);
-    console.log("STEP 11: Bouton DEV ajouté");
-  } else {
-    console.log("⚠️ window.DEV est introuvable");
   }
-
-  console.log("STEP 12: Fin de activateCheatMode()");
 }
 
-
-  
 function promptCheatCode() {
   const code = prompt("Entrez le code développeur :");
   if (code === CHEAT_CONFIG.CODE) {
     cheatState.unlocked = true;
-    localStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
+    sessionStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
     activateCheatMode();
   } else {
     alert("Code incorrect.");
@@ -401,7 +376,6 @@ function initCheatCode() {
     }
   });
 
-  // Si déjà débloqué → activer automatiquement
   if (cheatState.unlocked) {
     activateCheatMode();
   }
