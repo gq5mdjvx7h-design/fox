@@ -70,6 +70,26 @@
 
   <!-- Interface -->
   <script src="js/ui.js?v=400"></script>
+<script>
+  console.log("Fox Engine 9.0 prêt");
+
+  // Ajouter un jour
+  STATE.days.push({
+    id: Date.now(),
+    date: "2026-02-09",
+    hours: 7,
+    type: "normal"
+  });
+
+  recalcState();
+  saveState();
+
+  // Ajouter de l’XP
+  XP.add(120);
+
+  console.log("Niveau :", STATE.level);
+  console.log("XP total :", STATE.xp);
+</script>
 
 </body>
 </html>
