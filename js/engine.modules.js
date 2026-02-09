@@ -289,81 +289,30 @@ let cheatState = {
   lastClickTime: 0,
   unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
 };
-
 function activateCheatMode() {
-  debugLog("🎮 Mode développeur activé", "success");
+  console.log("🎮 activateCheatMode() appelée");
+  alert("CHEAT ACTIVÉ");
 
-  // 🔥 IMPORTANT : suppression du blocage en production
-  // (Tu peux remettre la condition si tu veux le bloquer en ligne)
-  // if (location.hostname !== "localhost") {
-  //   alert("Mode développeur désactivé en production");
-  //   return;
-  // }
+  // Test visuel brutal
+  document.body.style.background = "#222";
+  document.body.style.color = "#0f0";
 
-  // Affichage des éléments UI cachés
-  const badge = document.getElementById("cheatBadge");
-  if (badge) badge.classList.remove("hidden");
-
-  const banner = document.getElementById("debugBanner");
-  if (banner) banner.classList.remove("hidden");
-
-  const debugPanel = document.getElementById("debugPanel");
-  if (debugPanel) debugPanel.classList.remove("hidden");
-
-  const workMode = document.getElementById("workMode");
-  if (workMode) {
-    if (!Array.from(workMode.options).some(opt => opt.value === "demo")) {
-      const demoOption = document.createElement("option");
-      demoOption.value = "demo";
-      demoOption.textContent = "🎮 Démo (Mode développeur)";
-      workMode.appendChild(demoOption);
-    }
-  }
-
-  // Ajout des fonctions cheat
-  if (typeof addCheatFunctions === "function") {
-    addCheatFunctions();
-  }
-
-  // Bouton DEV
-  const existingBtn = document.getElementById("devMenuButton");
-  if (!existingBtn) {
-    const devBtn = document.createElement("button");
-    devBtn.id = "devMenuButton";
-    devBtn.textContent = "🛠️ DEV";
-    devBtn.style.position = "fixed";
-    devBtn.style.bottom = "20px";
-    devBtn.style.right = "20px";
-    devBtn.style.zIndex = "99999";
-    devBtn.style.padding = "10px 15px";
-    devBtn.style.borderRadius = "8px";
-    devBtn.style.background = "#ffcc00";
-    devBtn.style.color = "#000";
-    devBtn.style.fontWeight = "bold";
-    devBtn.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-    devBtn.style.cursor = "pointer";
-
-    devBtn.onclick = () => {
-      if (window.toggleDevPanel) {
-        window.toggleDevPanel();
-      } else {
-        alert("Le panneau développeur n'est pas encore chargé.");
-      }
-    };
-
-    document.body.appendChild(devBtn);
-  }
-
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
-  debugLog("🎮 FONCTIONNALITÉS DÉBLOQUÉES :", "success");
-  debugLog("  ✅ Panel debug complet", "success");
-  debugLog("  ✅ Mode démo saisie manuelle", "success");
-  debugLog("  ✅ Commandes console avancées", "success");
-  debugLog("  ✅ XP boost (x2)", "success");
-  debugLog("  ✅ Déblocage instantané badges", "success");
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  const testBox = document.createElement("div");
+  testBox.textContent = "DEV MODE ACTIVÉ";
+  testBox.style.position = "fixed";
+  testBox.style.top = "50%";
+  testBox.style.left = "50%";
+  testBox.style.transform = "translate(-50%, -50%)";
+  testBox.style.padding = "20px 30px";
+  testBox.style.background = "#000";
+  testBox.style.color = "#0f0";
+  testBox.style.fontSize = "20px";
+  testBox.style.zIndex = "999999";
+  document.body.appendChild(testBox);
 }
 
+
+  
 function promptCheatCode() {
   const code = prompt("Entrez le code développeur :");
   if (code === CHEAT_CONFIG.CODE) {
