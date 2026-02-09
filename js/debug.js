@@ -2,6 +2,9 @@
    FOX ENGINE — DEBUG & SAFETY SYSTEM
    Anti-crash, logs internes, surveillance du moteur
 ============================================================ */
+window.onerror = function (msg, url, line, col, err) {
+  alert("ERREUR JS : " + msg + " (ligne " + line + ")");
+};
 
 const FOX_DEBUG = {
   enabled: true,        // tu pourras désactiver plus tard
