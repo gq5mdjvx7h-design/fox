@@ -380,5 +380,9 @@ function initCheatCode() {
     activateCheatMode();
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  sessionStorage.removeItem(CHEAT_CONFIG.STORAGE_KEY);
+  initCheatCode();
+});
 
-document.addEventListener("DOMContentLoaded", initCheatCode);
+
