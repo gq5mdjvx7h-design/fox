@@ -290,25 +290,82 @@ let cheatState = {
   unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
 };
 function activateCheatMode() {
-  console.log("🎮 activateCheatMode() appelée");
-  alert("CHEAT ACTIVÉ");
+  console.log("STEP 1: activateCheatMode() appelée");
 
-  // Test visuel brutal
-  document.body.style.background = "#222";
-  document.body.style.color = "#0f0";
+  // Suppression du blocage localhost
+  console.log("STEP 2: Pas de blocage production");
 
-  const testBox = document.createElement("div");
-  testBox.textContent = "DEV MODE ACTIVÉ";
-  testBox.style.position = "fixed";
-  testBox.style.top = "50%";
-  testBox.style.left = "50%";
-  testBox.style.transform = "translate(-50%, -50%)";
-  testBox.style.padding = "20px 30px";
-  testBox.style.background = "#000";
-  testBox.style.color = "#0f0";
-  testBox.style.fontSize = "20px";
-  testBox.style.zIndex = "999999";
-  document.body.appendChild(testBox);
+  // Badge
+  console.log("STEP 3: Tentative d'afficher cheatBadge");
+  const badge = document.getElementById("cheatBadge");
+  if (badge) badge.classList.remove("hidden");
+
+  // Banner
+  console.log("STEP 4: Tentative d'afficher debugBanner");
+  const banner = document.getElementById("debugBanner");
+  if (banner) banner.classList.remove("hidden");
+
+  // Debug panel
+  console.log("STEP 5: Tentative d'afficher debugPanel");
+  const debugPanel = document.getElementById("debugPanel");
+  if (debugPanel) debugPanel.classList.remove("hidden");
+
+  // WorkMode
+  console.log("STEP 6: Tentative d'ajouter mode demo");
+  const workMode = document.getElementById("workMode");
+  if (workMode) {
+    if (!Array.from(workMode.options).some(opt => opt.value === "demo")) {
+      const demoOption = document.createElement("option");
+      demoOption.value = "demo";
+      demoOption.textContent = "🎮 Démo (Mode développeur)";
+      workMode.appendChild(demoOption);
+    }
+  }
+
+  // addCheatFunctions
+  console.log("STEP 7: Tentative d'exécuter addCheatFunctions()");
+  if (typeof addCheatFunctions === "function") {
+    addCheatFunctions();
+  } else {
+    console.log("⚠️ addCheatFunctions() n'existe pas");
+  }
+
+  // DEV MENU
+  console.log("STEP 8: Tentative d'activer DEV MENU");
+  if (window.DEV) {
+    console.log("STEP 9: DEV MENU détecté");
+
+    const devBtn = document.createElement("button");
+    devBtn.id = "devMenuButton";
+    devBtn.textContent = "🛠️ DEV";
+    devBtn.style.position = "fixed";
+    devBtn.style.bottom = "20px";
+    devBtn.style.right = "20px";
+    devBtn.style.zIndex = "99999";
+    devBtn.style.padding = "10px 15px";
+    devBtn.style.borderRadius = "8px";
+    devBtn.style.background = "#ffcc00";
+    devBtn.style.color = "#000";
+    devBtn.style.fontWeight = "bold";
+    devBtn.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+    devBtn.style.cursor = "pointer";
+
+    devBtn.onclick = () => {
+      console.log("STEP 10: Clic sur bouton DEV");
+      if (window.toggleDevPanel) {
+        window.toggleDevPanel();
+      } else {
+        alert("Le panneau développeur n'est pas encore chargé.");
+      }
+    };
+
+    document.body.appendChild(devBtn);
+    console.log("STEP 11: Bouton DEV ajouté");
+  } else {
+    console.log("⚠️ window.DEV est introuvable");
+  }
+
+  console.log("STEP 12: Fin de activateCheatMode()");
 }
 
 
